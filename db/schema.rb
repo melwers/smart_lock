@@ -10,9 +10,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 2020_12_09_150021) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "entries", force: :cascade do |t|
+    t.datetime "timestamp"
+    t.string "status_change"
+    t.string "lock_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["lock_id"], name: "index_entries_on_lock_id"
+  end
+
+  create_table "locks", id: :serial, force: :cascade do |t|
+    t.string "kind"
+    t.string "status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "servers", force: :cascade do |t|
+    t.string "access_token"
+    t.string "code_name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  add_foreign_key "entries", "locks"
 end
